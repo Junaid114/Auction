@@ -1,0 +1,14 @@
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+
+
+*.sublime*
+
+
+
+# End of https://mrkandreev.name/snippets/gitignore-generator/#react

@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "9cd8bb71-3bb4-4a72-a7df-8ab0f3db3e3a",
+		"name": "auction-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2607926"
+	},
+	"item": [
+		{
+			"name": "add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "one",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "title 1",
+							"type": "text"
+						},
+						{
+							"key": "bids",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "highBidder",
+							"value": "ccc",
+							"type": "text"
+						},
+						{
+							"key": "seller",
+							"value": "seller",
+							"type": "text"
+						},
+						{
+							"key": "myFile",
+							"type": "file",
+							"src": "/Users/sajid/Downloads/badminton.jpg"
+						},
+						{
+							"key": "img",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"key\": \"asdfasdf\",\n    \"title\": \"asdfasdf\",\n    \"bids\": 2,\n    \"price\": 2, //will be stored in cents?\n    \"highBidder\": \"asss\",\n    \"highBidderId\": \"sd\",\n    \"seller\": \"sajid\",\n    \"sellerId\": \"seler\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
