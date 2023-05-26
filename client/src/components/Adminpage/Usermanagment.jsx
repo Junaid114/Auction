@@ -10,7 +10,6 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
-  // Function to fetch users from the API
   const fetchUsers = async () => {
     try {
       const response = await axios.get('/api/users');
@@ -20,7 +19,6 @@ const UserManagement = () => {
     }
   };
 
-  // Function to create a new user
   const registerUser = async () => {
     try {
       const response = await axios.post('/api/users', newUser);
@@ -31,7 +29,6 @@ const UserManagement = () => {
     }
   };
 
-  // Function to update an existing user
   const updateUser = async (userId, updatedUser) => {
     try {
       await axios.put(`/api/users/${userId}`, updatedUser);
@@ -45,7 +42,6 @@ const UserManagement = () => {
     }
   };
 
-  // Function to delete a user
   const deleteUser = async (userId) => {
     try {
       await axios.delete(`/api/users/${userId}`);
@@ -56,7 +52,6 @@ const UserManagement = () => {
     }
   };
 
-  // Function to set the user being edited
   const editUser = (user) => {
     setEditingUser(user);
   };
@@ -65,7 +60,6 @@ const UserManagement = () => {
     <div>
       <h2>User Management</h2>
 
-      {/* User Registration Form */}
       <h3>User Registration</h3>
       <input
         type="text"
@@ -87,13 +81,12 @@ const UserManagement = () => {
       />
       <button onClick={registerUser}>Register</button>
 
-      {/* User Listing Component */}
       <h3>User List</h3>
       {users.map((user) => (
         <div key={user.id}>
           <p>Name: {user.name}</p>
           <p>Email: {user.email}</p>
-          {/* Update and Delete functionality */}
+
           {editingUser === user ? (
             <>
               <input

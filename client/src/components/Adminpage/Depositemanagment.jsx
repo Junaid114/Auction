@@ -6,10 +6,9 @@ const DepositManagement = () => {
   const [userId, setUserId] = useState('');
   const [amount, setAmount] = useState('');
 
-  // Function to handle user deposit
   const handleDeposit = async () => {
     try {
-      const response = await axios.post('/api/deposits', { userId, amount }); // Replace with your actual API endpoint
+      const response = await axios.post('/api/deposits', { userId, amount });
       const newDeposit = response.data;
       setDeposits([...deposits, newDeposit]);
       setUserId('');
@@ -25,7 +24,7 @@ const DepositManagement = () => {
 
   const fetchDeposits = async () => {
     try {
-      const response = await axios.get('/api/deposits'); // Replace with your actual API endpoint
+      const response = await axios.get('/api/deposits');
       const depositData = response.data;
       setDeposits(depositData);
     } catch (error) {
@@ -55,7 +54,6 @@ const DepositManagement = () => {
       />
       <button onClick={handleDeposit}>Deposit</button>
 
-      {/* Deposit Listing Component */}
       <h3>Deposit List</h3>
       {deposits.length > 0 ? (
         <ul>

@@ -9,7 +9,6 @@ const ProductManagement = () => {
     fetchProducts();
   }, []);
 
-  // function to fetch products from the API
   const fetchProducts = async () => {
     try {
       const response = await axios.get('/api/products');
@@ -19,7 +18,6 @@ const ProductManagement = () => {
     }
   };
 
-  // function to create a new product
   const createProduct = async () => {
     try {
       const response = await axios.post('/api/products', newProduct);
@@ -30,7 +28,6 @@ const ProductManagement = () => {
     }
   };
 
-  // function to update an existing product
   const updateProduct = async (productId, updatedProduct) => {
     try {
       await axios.put(`/api/products/${productId}`, updatedProduct);
@@ -43,7 +40,6 @@ const ProductManagement = () => {
     }
   };
 
-  // function to delete a product
   const deleteProduct = async (productId) => {
     try {
       await axios.delete(`/api/products/${productId}`);
