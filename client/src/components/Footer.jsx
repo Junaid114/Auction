@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const Footer = () => {
   let year = new Date().getFullYear();
@@ -7,12 +7,9 @@ const Footer = () => {
       <footer className="footer fixed-bottom bg-dark pt-3">
         <div className="container">
           <span className="text-light">
-            <a
-              className="text-light text-decoration-none"
-              href="https://github.com/TallSoup"
-            >
-              TallSoup
-            </a>{" "}
+            <a className="text-light text-decoration-none" href="">
+              Auction trusty
+            </a>{' '}
             &copy; {year}
           </span>
         </div>

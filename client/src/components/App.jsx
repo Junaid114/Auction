@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import AuctionItem from "./AuctionItem";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import React, { useState, useEffect } from 'react';
+import AuctionItem from './AuctionItem';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import TimeLeft from './TimeLeft';
 
 const App = () => {
   //
-  const closeDate = new Date(2022, 6, 15, 14, 0, 0);
+  // const closeDate = new Date(2022, 6, 15, 14, 0, 0);
   //
 
   const [items, setItems] = useState([]);
@@ -13,14 +14,14 @@ const App = () => {
   console.log(loggedIn);
 
   const getAll = () => {
-    fetch("/all")
+    fetch('/all')
       .then((res) => res.json())
       .then((data) => setItems(data));
   };
 
   //candidate for useEffect?
   const isLoggedIn = () => {
-    fetch("/loggedin")
+    fetch('/loggedin')
       .then((res) => res.json())
       .then((data) => setLoggedIn(data));
   };
@@ -65,33 +66,33 @@ const App = () => {
       highBidderID: loggedIn.id,
     };
 
-    fetch("/bid", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch('/bid', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedBid),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log('Success:', data);
         getAll(); //this makes it refresh immediately - ok tho?
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
       });
   };
 
   const deleteItem = (id) => {
-    fetch("/delete", {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
+    fetch('/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
       body: id,
     })
       .then((response) => response)
       .then((data) => {
-        console.log("Success:", data);
+        console.log('Success:', data);
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
       });
     getAll();
   };
@@ -101,14 +102,14 @@ const App = () => {
       <Navbar user={loggedIn} />
       <div className="container ">
         <div className="container">
-          <h4 className="text-center">Auction Close begins at:</h4>
+          <h4 className="text-center">Auction begins at:</h4>
           <h5 className="text-center">
-            {closeDate.toLocaleString("en-US", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
+            {TimeLeft.toLocaleString('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
             })}
           </h5>
         </div>
@@ -126,7 +127,7 @@ const App = () => {
                 highBidderId={item.highBidderId}
                 seller={item.seller}
                 sellerId={item.sellerId}
-                closeDate={closeDate}
+                closeDate={TimeLeft}
                 img={item.img}
                 index={index}
                 sendBid={sendBid}
