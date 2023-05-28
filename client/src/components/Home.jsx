@@ -4,8 +4,8 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import TimeLeft from "./TimeLeft";
 import { Routes, Route } from "react-router-dom";
-import Home from "./Home";
-const App = () => {
+
+const Home = () => {
   //
   // const closeDate = new Date(2022, 6, 15, 14, 0, 0);
   //
@@ -21,7 +21,11 @@ const App = () => {
   };
 
   //candidate for useEffect?
-  const isLoggedIn = () => !!localStorage.getItem("user");
+  const isLoggedIn = () => {
+    fetch("http://localhost:3001/loggedin")
+      .then((res) => res.json())
+      .then((data) => setLoggedIn(data));
+  };
 
   useEffect(() => {
     getAll();
@@ -95,15 +99,39 @@ const App = () => {
   };
 
   return (
-    <div>
-      <Navbar user={loggedIn} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+    <>
+      <div className="container ">
+        <div className="container">
+          <h4 className="text-center">Auction begins at:</h4>
+          <h5 className="text-center">{""}</h5>
+        </div>
 
-      <Footer />
-    </div>
+        <div className="row ">
+          {items
+            .map((item, index) => (
+              <AuctionItem
+                key={item.key}
+                id={item.id}
+                title={item.title}
+                bids={item.bids}
+                price={item.price}
+                highBidder={item.bids}
+                highBidderId={item.highBidderId}
+                seller={item.seller}
+                sellerId={item.sellerId}
+                closeDate={""}
+                img={item.img}
+                index={index}
+                sendBid={sendBid}
+                deleteItem={deleteItem}
+                user={loggedIn}
+              />
+            ))
+            .sort()}
+        </div>
+      </div>
+    </>
   );
 };
 
-export default App;
+export default Home;

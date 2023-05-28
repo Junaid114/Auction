@@ -7,7 +7,9 @@ const mongoose = require("mongoose");
 const fs = require("file-system");
 const multer = require("multer");
 const app = express();
-
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const cors = require("cors");
 // SET STORAGE
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -60,6 +62,11 @@ app.use(
 // need this to parse the json with the req
 app.use(express.json());
 app.use(express.text());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 //connect to Mongo
 mongoose
@@ -87,6 +94,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   googleId: String,
   watchList: String,
+  token: String,
 });
 
 //userSchema.plugin(passportLocalMongoose);
@@ -135,6 +143,7 @@ app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 // check if logged in
 loggedIn = (req, res, next) => {
+  console.log(req.user);
   if (req.user) {
     //can also be req.isAuthenticated()
     next();
@@ -144,9 +153,9 @@ loggedIn = (req, res, next) => {
 
 //ROUTES
 
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+// });
 
 // app.get(
 //   "/auth/google",
@@ -270,7 +279,10 @@ app.post("/edit", loggedIn, (req, res, next) => {
   });
 });
 
+/*
 app.get("/loggedin", (req, res) => {
+  console.log("loggedin");
+  console.log(req.user);
   if (req.isAuthenticated()) {
     res.send(req.user);
   } else {
@@ -278,6 +290,7 @@ app.get("/loggedin", (req, res) => {
   }
   //needs a response if not logged in?
 });
+*/
 
 app.post("/login", (req, res) => {
   let { username, password } = req.body;
@@ -287,6 +300,19 @@ app.post("/login", (req, res) => {
     password: password,
   });
 
+  const token = jwt.sign(
+    { user_id: user._id, username },
+    process.env.TOKEN_KEY,
+    {
+      expiresIn: "24h",
+    }
+  );
+  // save user token
+  //user.token = token;
+  console.log("login user", { token, username });
+  res.status(200).json({ id: user._id, token, username });
+
+  /*
   req.login(user, function (err) {
     if (err) {
       console.log(err);
@@ -296,6 +322,7 @@ app.post("/login", (req, res) => {
       });
     }
   });
+  */
 });
 
 app.get("/logout", function (req, res) {
@@ -310,25 +337,54 @@ app.get("/logout", function (req, res) {
   });
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   console.log(req.body);
   let { username, password } = req.body;
+  console.log(User);
+  const oldUser = await User.findOne({ username });
 
-  User.register({ username: username }, password, function (err, user) {
-    if (err) {
-      console.log(err);
-    } else {
-      passport.authenticate("local")(req, res, function () {
-        res.redirect("/");
-      });
-    }
+  if (oldUser) {
+    return res
+      .status(409)
+      .send({ message: "User Already Exist. Please Login" });
+  }
+
+  //Encrypt user password
+  encryptedPassword = await bcrypt.hash(password, 10);
+  const user = await User.create({
+    username,
+    password,
+    email: username.toLowerCase(), // sanitize: convert email to lowercase
+    password: encryptedPassword,
   });
+  console.log("user created", user);
+  //User.register({ username: username }, password, function (err, user) {
+  if (user) {
+    console.log(err);
+
+    const token = jwt.sign(
+      { user_id: user._id, username },
+      process.env.TOKEN_KEY,
+      {
+        expiresIn: "24h",
+      }
+    );
+    console.log("login");
+    console.log(token);
+    // save user token
+    user.token = token;
+    //}
+    //passport.authenticate("local")(req, res, function () {
+    res.redirect("/");
+    //});
+  }
+  //});
 });
 
 // catchall route
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+// });
 
 //add record
 function addRecord() {

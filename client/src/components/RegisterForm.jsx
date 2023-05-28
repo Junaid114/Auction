@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import Modal from "react-bootstrap/Modal";
 
 const RegisterForm = (props) => {
   const [loginData, setLoginData] = useState("");
   const [registerData, setRegisterData] = useState("");
-
+  const modalRef = useRef();
+  const [show, setShow] = useState(props.show);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   // const [passcheck, setPasscheck] = useState(false);
 
   const registerChangeHandler = (event) => {
@@ -28,27 +32,34 @@ const RegisterForm = (props) => {
   };
 
   const registerHandler = (event) => {
+    event.preventDefault();
     if (registerData.username && registerData.password) {
       if (registerData.password === registerData.passwordcheck) {
-        console.log("passwords match");
         if (validateEmail) {
-          console.log("email valid");
           let newUser = {
             username: registerData.username,
             password: registerData.password,
           };
 
-          fetch("/register", {
+          fetch("http://localhost:3001/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newUser),
           })
-            .then((response) => response.json())
+            .then((response) => {
+              debugger;
+
+              if (response.status === 409) {
+                alert(`${registerData.username} already exists.`);
+              }
+              response.json();
+            })
             .then((data) => {
               console.log("Success:", data);
             })
             .catch((error) => {
-              console.log("Error:", error);
+              alert(error.message);
+              console.log(error);
             });
         } else {
           alert("That is not a valid email, try again.");
@@ -65,14 +76,19 @@ const RegisterForm = (props) => {
   };
 
   const loginHandler = (event) => {
+    event.preventDefault();
+    console.log(modalRef);
+    //modalRef.current.close();
+
     if (loginData.username && loginData.password) {
-      fetch("/login", {
+      fetch("http://localhost:3001/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
       })
         .then((response) => response.json())
         .then((data) => {
+          localStorage.setItem("user", data);
           console.log("Success:", data);
         })
         .catch((error) => {
@@ -90,118 +106,64 @@ const RegisterForm = (props) => {
   }
 
   return (
-    <div
-      className="modal fade"
-      id="registerModal"
-      tabIndex="-1"
-      aria-labelledby="registerModalLabel"
-      aria-hidden="true"
+    <Modal
+      show={props.show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
     >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h6 className="modal-title fw-bold" id="registerModalLabel">
-              Welcome to the Auction
-            </h6>
+      <Modal.Header>
+        <Modal.Title>Welcome to the Auction</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={registerHandler}>
+          <div className="form-group ">
+            <label htmlFor="email">Email</label>
+
+            <input
+              type="email"
+              className="form-control"
+              name="username"
+              placeholder=""
+              onChange={registerChangeHandler}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+
+            <input
+              type="password"
+              className="form-control"
+              name="password"
+              placeholder=""
+              onChange={registerChangeHandler}
+            />
+            <label htmlFor="passwordcheck">Confirm Password</label>
+            <input
+              type="password"
+              className="form-control"
+              name="passwordcheck"
+              placeholder=""
+              onChange={registerChangeHandler}
+            />
+          </div>
+          <div className="d-grid gap-2 mt-4 mb-4">
+            <button type="submit" className="btn btn-outline-dark ">
+              Create Account
+            </button>
+          </div>
+          <div className="d-grid gap-2 mt-4 mb-4">
             <button
               type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              className="btn btn-outline-dark"
+              onClick={props.toggle}
+            >
+              Close
+            </button>
           </div>
-
-          <div className="modal-body">
-            <h6 className="text-center">Sign In</h6>
-
-            <form onSubmit={loginHandler}>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-
-                <input
-                  type="email"
-                  className="form-control"
-                  name="username"
-                  placeholder=""
-                  onChange={loginChangeHandler}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-
-                <input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  placeholder=""
-                  onChange={loginChangeHandler}
-                />
-              </div>
-              <div className="d-grid gap-2 mt-4 ">
-                <button type="submit" className="btn btn-outline-dark ">
-                  Sign In
-                </button>
-              </div>
-            </form>
-            <hr />
-
-            <h6 className="text-center">Register</h6>
-
-            <form onSubmit={registerHandler}>
-              <div className="form-group ">
-                <label htmlFor="email">Email</label>
-
-                <input
-                  type="email"
-                  className="form-control"
-                  name="username"
-                  placeholder=""
-                  onChange={registerChangeHandler}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-
-                <input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  placeholder=""
-                  onChange={registerChangeHandler}
-                />
-                <label htmlFor="passwordcheck">Confirm Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="passwordcheck"
-                  placeholder=""
-                  onChange={registerChangeHandler}
-                />
-              </div>
-              <div className="d-grid gap-2 mt-4 mb-4">
-                <button type="submit" className="btn btn-outline-dark ">
-                  Create Account
-                </button>
-              </div>
-            </form>
-
-            <h6 className="line">
-              <span>or</span>
-            </h6>
-            <div className="d-grid gap-2">
-              <a
-                className="btn btn-outline-dark btn-google my-2"
-                href="/auth/google"
-                role="button"
-              >
-                <i className="fab fa-google me-2"></i>
-                Continue with Google
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </form>
+      </Modal.Body>
+    </Modal>
   );
 };
 

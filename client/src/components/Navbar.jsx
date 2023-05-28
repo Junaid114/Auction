@@ -1,14 +1,41 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AddItem from "./AddItem";
 import RegisterForm from "./RegisterForm";
+import LoginForm from "./LoginForm";
 
 const Navbar = (props) => {
+  const [showRegistrationFrom, setShowRegistrationFrom] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
+  const [user, setUser] = useState(null);
+  const closeRegistrationFrom = useCallback(() => {
+    setShowRegistrationFrom((prev) => !prev);
+  }, []);
+
+  const closeLoginFrom = useCallback(() => {
+    setShowLoginForm((prev) => !prev);
+  }, []);
+  useEffect(() => {
+    debugger;
+    const loggedUser = localStorage.getItem("user");
+    if (loggedUser !== null) {
+      setUser(JSON.parse(loggedUser));
+    }
+  }, []);
+  const logout = () => {
+    setUser(null);
+    localStorage.setItem("user", null);
+  };
+  const login = useCallback((data) => {
+    if (data !== null) {
+      setUser(data);
+    }
+  }, []);
   return (
     <div>
       <nav className="navbar navbar-brand-center sticky-top navbar-expand-lg navbar-dark ">
         <div className="container">
           <a className="navbar-brand fs-2 text-light" href="/">
-            AUCTIONAPP <i className="fa-solid fa-gavel"></i>
+            AUCTION APP <i className="fa-solid fa-gavel"></i>
           </a>
           <button
             className="navbar-toggler"
@@ -36,29 +63,38 @@ const Navbar = (props) => {
                 </li>
               )}
 
-              {!props.user && (
-                <li
-                  className="nav-item"
-                  data-bs-toggle="modal"
-                  data-bs-target="#registerModal"
-                >
-                  <a className="btn nav-link text-light">Register/Sign In</a>
-                </li>
-              )}
-
-              {props.user && (
-                <li className="nav-item">
-                  <a className="btn nav-link text-light" href="/logout">
-                    Log Out
-                  </a>
-                </li>
-              )}
-              {props.user && (
-                <li className="nav-item">
-                  <a className="btn nav-link text-light fw-bold">
-                    Welcome {props.user.username}
-                  </a>
-                </li>
+              {user !== null ? (
+                <button className="btn nav-link text-light" onClick={logout}>
+                  {user?.username}
+                </button>
+              ) : (
+                <>
+                  {" "}
+                  <li
+                    className="nav-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#registerModal"
+                  >
+                    <button
+                      className="btn nav-link text-light"
+                      onClick={() => setShowRegistrationFrom((prev) => !prev)}
+                    >
+                      Register
+                    </button>
+                  </li>
+                  <li
+                    className="nav-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#registerModal"
+                  >
+                    <button
+                      className="btn nav-link text-light"
+                      onClick={() => setShowLoginForm((prev) => !prev)}
+                    >
+                      SignIn
+                    </button>
+                  </li>
+                </>
               )}
             </ul>
           </div>
@@ -66,7 +102,15 @@ const Navbar = (props) => {
       </nav>
 
       {/* MODALS */}
-      <RegisterForm />
+      <RegisterForm
+        toggle={closeRegistrationFrom}
+        show={showRegistrationFrom}
+      />
+      <LoginForm
+        toggle={closeLoginFrom}
+        show={showLoginForm}
+        loginHandler={login}
+      />
       <AddItem loggedIn={props.user} />
     </div>
   );

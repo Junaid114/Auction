@@ -33,7 +33,7 @@ const AddItem = (props) => {
 
     console.log("client: ", data);
 
-    fetch("/add", {
+    fetch("http://localhost:3001/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

@@ -1,123 +1,103 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from "react";
+import Modal from "react-bootstrap/Modal";
 
 const LoginForm = (props) => {
-  const [data, setData] = useState();
-  const changeHandler = (event) => {
+  const [loginData, setLoginData] = useState("");
+
+  const [show, setShow] = useState(props.show);
+  const handleClose = () => setShow(false);
+  const loginChangeHandler = (event) => {
     let { name, value } = event.target;
-    setData((prevItem) => {
+    setLoginData((prevItem) => {
       return {
         ...prevItem,
         [name]: value,
       };
     });
-    // console.log(data);
+    // console.log(loginData);
   };
 
-  const loginHandler = () => {
-    let data = {
-      email: data.username,
-      password: data.password,
-    };
+  const loginHandler = (event) => {
+    event.preventDefault();
 
-    fetch('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Success:', data);
+    if (loginData.username && loginData.password) {
+      fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
       })
-      .catch((error) => {
-        console.log('Error:', error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          localStorage.setItem("user", JSON.stringify(data));
+          console.log("Success:", data);
+          props.loginHandler(data);
+          props.toggle();
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
+    } else {
+      alert("Please fill in both username and password to login");
+      event.preventDefault();
+    }
   };
+
+  function validateEmail(email) {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
 
   return (
-    <div
-      className="modal fade"
-      id="loginModal"
-      tabIndex="-1"
-      aria-labelledby="loginModalLabel"
-      aria-hidden="true"
+    <Modal
+      show={props.show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
     >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h6 className="modal-title fw-bold" id="loginModalLabel">
-              Welcome to the Auction
-            </h6>
-            {/* <h1>login</h1> */}
+      <Modal.Header>
+        <Modal.Title>Welcome to the Auction</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={loginHandler}>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+
+            <input
+              type="email"
+              className="form-control"
+              name="username"
+              placeholder=""
+              onChange={loginChangeHandler}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+
+            <input
+              type="password"
+              className="form-control"
+              name="password"
+              placeholder=""
+              onChange={loginChangeHandler}
+            />
+          </div>
+          <div className="d-grid gap-2 mt-4 ">
+            <button type="submit" className="btn btn-outline-dark ">
+              Sign In
+            </button>
+          </div>
+          <div className="d-grid gap-2 mt-4 mb-4">
             <button
               type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+              className="btn btn-outline-dark"
+              onClick={props.toggle}
+            >
+              Close
+            </button>
           </div>
-
-          <div className="modal-body">
-            {/* <h3>Sign in or Login to Bid</h3> */}
-            <h6>
-              New Here?
-              <a
-                data-bs-dismiss="modal"
-                data-bs-toggle="modal"
-                data-bs-target="#registerModal"
-                className="close"
-                href="#"
-              >
-                Create an account here.
-              </a>
-            </h6>
-
-            <form onSubmit={loginHandler} method="POST">
-              <div className="form-group mt-4">
-                <label htmlFor="email">Email</label>
-
-                <input
-                  type="email"
-                  className="form-control"
-                  name="username"
-                  placeholder=""
-                  onChange={changeHandler}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-
-                <input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  placeholder=""
-                  onChange={changeHandler}
-                />
-              </div>
-              <div className="d-grid gap-2 mt-4 mb-4">
-                <button type="submit" className="btn btn-outline-dark ">
-                  Sign In
-                </button>
-              </div>
-            </form>
-
-            <h6 className="line">
-              <span>or</span>
-            </h6>
-            <div className="d-grid gap-2">
-              <a
-                className="btn btn-outline-dark btn-google my-2"
-                href="/auth/google"
-                role="button"
-              >
-                <i className="fab fa-google me-2"></i>
-                Continue with Google
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </form>
+      </Modal.Body>
+    </Modal>
   );
 };
 
