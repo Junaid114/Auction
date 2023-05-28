@@ -123,11 +123,11 @@ const App = () => {
                 title={item.title}
                 bids={item.bids}
                 price={item.price}
-                highBidder={item.highBidder}
+                highBidder={item.bids}
                 highBidderId={item.highBidderId}
                 seller={item.seller}
                 sellerId={item.sellerId}
-                closeDate={TimeLeft}
+                // closeDate={TimeLeft}
                 img={item.img}
                 index={index}
                 sendBid={sendBid}
