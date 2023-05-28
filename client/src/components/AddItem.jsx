@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { v4 as uuid } from 'uuid';
+import React, { useState } from "react";
+import { v4 as uuid } from "uuid";
 
 const AddItem = (props) => {
-  const [item, setItem] = useState('');
+  const [item, setItem] = useState("");
 
   const changeHandler = (event) => {
     let { name, value } = event.target;
@@ -23,26 +23,27 @@ const AddItem = (props) => {
       title: item.title,
       bids: 0,
       price: 0, //change to store in cents?
-      highBidder: '',
-      highBidderId: '',
+      highBidder: "",
+      highBidderId: "",
       seller: props.loggedIn.username,
       sellerId: props.loggedIn.id,
       img: item.img,
+      closeBidDateTime: "",
     };
 
-    console.log('client: ', data);
+    console.log("client: ", data);
 
-    fetch('/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch("/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', data);
+        console.log("Success:", data);
       })
       .catch((error) => {
-        console.log('Error:', error);
+        console.log("Error:", error);
       });
   };
 
@@ -77,7 +78,7 @@ const AddItem = (props) => {
                   name="title"
                   placeholder=""
                   onChange={changeHandler}
-                  value={item.title || ''}
+                  value={item.title || ""}
                 />
 
                 <div className="mt-2">
@@ -87,7 +88,7 @@ const AddItem = (props) => {
                     name="img"
                     placeholder=""
                     onChange={changeHandler}
-                    value={item.img || ''}
+                    value={item.img || ""}
                   />
                   <textarea
                     className="form-control"
@@ -95,7 +96,7 @@ const AddItem = (props) => {
                     placeholder="Description"
                     rows="3"
                     onChange={changeHandler}
-                    value={item.desc || ''}
+                    value={item.desc || ""}
                   />
                   <button className="btn btn-primary mt-4">Add Item</button>
                 </div>

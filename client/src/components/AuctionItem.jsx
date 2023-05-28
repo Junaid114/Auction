@@ -8,6 +8,7 @@ import HighBidder from "./HighBidder";
 import Seller from "./Seller";
 import Title from "./Title";
 import EditButton from "./EditButton";
+import CountdownTimer from "./Counter/CountDownTimer";
 
 const Item = (props) => {
   const [left, setleft] = useState();
@@ -28,8 +29,8 @@ const Item = (props) => {
     const day = hour * 24;
 
     let now = new Date().getTime();
-    let then = props.closeDate.getTime();
-    difference = then - now;
+    //let then = props.closeDate.getTime();
+    //difference = then - now;
     let dif = difference + 20 * 1000 * props.index;
     let daysLeft = Math.floor(dif / day);
     let hoursLeft = Math.floor((dif / hour) % 24);
@@ -93,7 +94,22 @@ const Item = (props) => {
   let biddingClosed = () => {
     alert("Bidding has closed for this item.");
   };
+  const TIME_LEFT =
+    (new Date("2023-05-29 11:23:54").getDate() - new Date().getDate()) *
+    24 *
+    60 *
+    60 *
+    1000;
+  const SEVEN_DAYS_IN_MS = 7 * 24 * 60 * 60 * 1000;
+  const NOW_IN_MS = new Date().getTime();
+  // const NOW_IN_MS = new Date(new Date().getDate() + 2).getTime();
+  //console.log("dateeeeeeeeeeeeeeeee=> ", NOW_IN_MS);
 
+  const dateTimeAfterThreeDays = NOW_IN_MS + TIME_LEFT;
+  //const dateTimeAfterThreeDays = NOW_IN_MS + new Date("2023-05-28 11:23:54");
+  console.log("now time => ", new Date("2023-05-28 11:23:54").getDay());
+  console.log(dateTimeAfterThreeDays);
+  // const dateTimeAfterSevenDays = NOW_IN_MS + SEVEN_DAYS_IN_MS;
   return (
     <div className="container my-0 px-0 d-flex justify-content-center align-items-center col-sm-6 col-lg-4 col-xl-3">
       <div className="card border-0">
@@ -129,7 +145,8 @@ const Item = (props) => {
         </div>
         <div className="d-flex justify-content-between align-items-center my-0">
           <CurrentBid price={props.price} />
-          <TimeLeft time={left} difference={difference} />
+          {/* <TimeLeft time={left} difference={difference} /> */}
+          <CountdownTimer targetDate={dateTimeAfterThreeDays} />
         </div>
 
         <div>
