@@ -86,6 +86,8 @@ const itemSchema = new mongoose.Schema({
   seller: String,
   sellerId: String,
   img: String,
+  auctionStartDate: String,
+  auctionEndDate: String,
 });
 
 const userSchema = new mongoose.Schema({
@@ -171,21 +173,24 @@ loggedIn = (req, res, next) => {
 //   })
 // );
 
-app.post("/add", upload1.single("myFile"), (req, res) => {
-
-  var img = fs.readFileSync(req.file.path);
-  var encode_image = img.toString("base64");
+app.post("/add", upload1.single("product_picture"), (req, res) => {
+  console.log("image path ");
+  console.log(req.product_picture);
+  var img = fs.readFileSync(req.product_picture);
+  //console.log("image");
+  console.log(img);
+  //var encode_image = img.toString("base64");
   // Define a JSONobject for the image attributes for saving to database
-  var finalImg = {
-    contentType: req.file.mimetype,
-    image: Buffer.from(encode_image, "base64"),
-  };
+  // var finalImg = {
+  //   contentType: req.file.mimetype,
+  //   image: Buffer.from(encode_image, "base64"),
+  // };
 
-  console.log(req.file.buffer.toString("base64"));
+  //console.log(req.file.buffer.toString("base64"));
   //res.send(file);
-  const body = { ...req.body, img: req.file.buffer.toString("base64") };
-  const item = new Item(body);
-  item.img = req.file.buffer.toString("base64");
+  //const body = { ...req.body, img: req.file.buffer.toString("base64") };
+  const item = new Item(req.body);
+  //item.img = req.file.buffer.toString("base64");
   console.log("adding");
   console.log(item);
   console.log("body");
