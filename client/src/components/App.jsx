@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import AuctionItem from "./AuctionItem";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import TimeLeft from "./TimeLeft";
-import { Routes, Route } from "react-router-dom";
-import Home from "./Home";
+import React, { useState, useEffect } from 'react';
+import AuctionItem from './AuctionItem';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import AddItem from './AddItem';
+import TimeLeft from './TimeLeft';
+import { Routes, Route } from 'react-router-dom';
+import Home from './Home';
 const App = () => {
   //
   // const closeDate = new Date(2022, 6, 15, 14, 0, 0);
@@ -15,13 +16,13 @@ const App = () => {
   console.log(loggedIn);
 
   const getAll = () => {
-    fetch("http://localhost:3001/all")
+    fetch('http://localhost:3001/all')
       .then((res) => res.json())
       .then((data) => setItems(data));
   };
 
   //candidate for useEffect?
-  const isLoggedIn = () => !!localStorage.getItem("user");
+  const isLoggedIn = () => !!localStorage.getItem('user');
 
   useEffect(() => {
     getAll();
@@ -63,33 +64,33 @@ const App = () => {
       highBidderID: loggedIn.id,
     };
 
-    fetch("http://localhost:3001/bid", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch('http://localhost:3001/bid', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedBid),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log('Success:', data);
         getAll(); //this makes it refresh immediately - ok tho?
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
       });
   };
 
   const deleteItem = (id) => {
-    fetch("http://localhost:3001/delete", {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
+    fetch('http://localhost:3001/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
       body: id,
     })
       .then((response) => response)
       .then((data) => {
-        console.log("Success:", data);
+        console.log('Success:', data);
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
       });
     getAll();
   };
@@ -99,6 +100,7 @@ const App = () => {
       <Navbar user={loggedIn} />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/add" element={<AddItem />} />
       </Routes>
 
       <Footer />

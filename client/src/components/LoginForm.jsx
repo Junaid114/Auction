@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
-import Modal from "react-bootstrap/Modal";
+import React, { useRef, useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
 
 const LoginForm = (props) => {
-  const [loginData, setLoginData] = useState("");
+  const [loginData, setLoginData] = useState('');
 
   const [show, setShow] = useState(props.show);
   const handleClose = () => setShow(false);
@@ -21,23 +21,23 @@ const LoginForm = (props) => {
     event.preventDefault();
 
     if (loginData.username && loginData.password) {
-      fetch("http://localhost:3001/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      fetch('http://localhost:3001/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData),
       })
         .then((response) => response.json())
         .then((data) => {
-          localStorage.setItem("user", JSON.stringify(data));
-          console.log("Success:", data);
+          localStorage.setItem('user', JSON.stringify(data));
+          console.log('Success:', data);
           props.loginHandler(data);
           props.toggle();
         })
         .catch((error) => {
-          console.log("Error:", error);
+          console.log('Error:', error);
         });
     } else {
-      alert("Please fill in both username and password to login");
+      alert('Please fill in both username and password to login');
       event.preventDefault();
     }
   };

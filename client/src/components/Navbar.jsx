@@ -1,7 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import AddItem from "./AddItem";
-import RegisterForm from "./RegisterForm";
-import LoginForm from "./LoginForm";
+import React, { useCallback, useEffect, useState } from 'react';
+import AddItem from './AddItem';
+import RegisterForm from './RegisterForm';
+import Wallet from './Wallet';
+import LoginForm from './LoginForm';
+import { Link } from 'react-router-dom';
 
 const Navbar = (props) => {
   const [showRegistrationFrom, setShowRegistrationFrom] = useState(false);
@@ -10,20 +12,20 @@ const Navbar = (props) => {
   const closeRegistrationFrom = useCallback(() => {
     setShowRegistrationFrom((prev) => !prev);
   }, []);
+  console.log('user', user);
 
   const closeLoginFrom = useCallback(() => {
     setShowLoginForm((prev) => !prev);
   }, []);
   useEffect(() => {
-    debugger;
-    const loggedUser = localStorage.getItem("user");
+    const loggedUser = localStorage.getItem('user');
     if (loggedUser !== null) {
       setUser(JSON.parse(loggedUser));
     }
   }, []);
   const logout = () => {
     setUser(null);
-    localStorage.setItem("user", null);
+    localStorage.setItem('user', null);
   };
   const login = useCallback((data) => {
     if (data !== null) {
@@ -53,13 +55,21 @@ const Navbar = (props) => {
 
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              {props.user && (
+              <i className="nav-item">
+                {/* {/* <Link to="/Wallet"> */}
+
+                {/* </Link> */}
+              </i>
+
+              {user && (
                 <li
                   className="nav-item"
                   data-bs-toggle="modal"
                   data-bs-target="#addModal"
                 >
-                  <a className="btn nav-link text-light">Add Item</a>
+                  <Link to="/add" className="btn nav-link text-light">
+                    Add Item
+                  </Link>
                 </li>
               )}
 
@@ -69,7 +79,7 @@ const Navbar = (props) => {
                 </button>
               ) : (
                 <>
-                  {" "}
+                  {' '}
                   <li
                     className="nav-item"
                     data-bs-toggle="modal"

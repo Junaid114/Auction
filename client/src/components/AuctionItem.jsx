@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import Photos from "./Photos";
-import BidCount from "./BidCount";
-import CurrentBid from "./CurrentBid";
-import TimeLeft from "./TimeLeft";
-import Button from "./Button";
-import HighBidder from "./HighBidder";
-import Seller from "./Seller";
-import Title from "./Title";
-import EditButton from "./EditButton";
-import CountdownTimer from "./Counter/CountDownTimer";
+import React, { useState } from 'react';
+import Photos from './Photos';
+import BidCount from './BidCount';
+import CurrentBid from './CurrentBid';
+import TimeLeft from './TimeLeft';
+import Button from './Button';
+import HighBidder from './HighBidder';
+import Seller from './Seller';
+import Title from './Title';
+import EditButton from './EditButton';
+import CountdownTimer from './Counter/CountDownTimer';
 
 const Item = (props) => {
   const [left, setleft] = useState();
@@ -88,14 +88,14 @@ const Item = (props) => {
       default:
         increase = 500;
     }
-    return props.price + increase;
+    return price + increase;
   };
 
   let biddingClosed = () => {
-    alert("Bidding has closed for this item.");
+    alert('Bidding has closed for this item.');
   };
   const TIME_LEFT =
-    (new Date("2023-05-29 11:23:54").getDate() - new Date().getDate()) *
+    (new Date('2023-05-29 11:23:54').getDate() - new Date().getDate()) *
     24 *
     60 *
     60 *
@@ -107,7 +107,7 @@ const Item = (props) => {
 
   const dateTimeAfterThreeDays = NOW_IN_MS + TIME_LEFT;
   //const dateTimeAfterThreeDays = NOW_IN_MS + new Date("2023-05-28 11:23:54");
-  console.log("now time => ", new Date("2023-05-28 11:23:54").getDay());
+  console.log('now time => ', new Date('2023-05-28 11:23:54').getDay());
   console.log(dateTimeAfterThreeDays);
   // const dateTimeAfterSevenDays = NOW_IN_MS + SEVEN_DAYS_IN_MS;
   return (
@@ -117,14 +117,14 @@ const Item = (props) => {
         <div className="btn-group d-flex justify-content-between align-items-center">
           {props.user ? (
             <Button
-              handleClick={left !== "Bidding Closed" ? sendBid : biddingClosed}
+              handleClick={left !== 'Bidding Closed' ? sendBid : biddingClosed}
               name={
                 props.user.id !== props.highBidderId
                   ? `BID $${newBid()}`
-                  : "WINNING"
+                  : 'WINNING'
               }
               color={
-                props.user.id !== props.highBidderId ? "primary" : "success"
+                props.user.id !== props.highBidderId ? 'primary' : 'success'
               }
             />
           ) : (
@@ -150,8 +150,8 @@ const Item = (props) => {
         </div>
 
         <div>
-          <HighBidder name={props.user ? props.highBidder : "******"} />
-          <Seller name={props.user ? props.seller : "******"} />
+          <HighBidder name={props.user ? props.highBidder : '******'} />
+          <Seller name={props.user ? props.seller : '******'} />
         </div>
       </div>
     </div>

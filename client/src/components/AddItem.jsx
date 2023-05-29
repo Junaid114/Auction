@@ -1,17 +1,24 @@
-import React, { useState } from "react";
-import { v4 as uuid } from "uuid";
+import React, { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 
 const AddItem = (props) => {
-  const [item, setItem] = useState("");
+  const [item, setItem] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const changeHandler = (event) => {
-    let { name, value } = event.target;
+    const { name, value } = event.target;
     setItem((prevItem) => {
       return {
         ...prevItem,
         [name]: value,
       };
     });
+    if (name === 'startDate') {
+      setStartDate(value);
+    } else if (name === 'endDate') {
+      setEndDate(value);
+    }
   };
 
   const addUserItem = () => {
@@ -22,28 +29,29 @@ const AddItem = (props) => {
       id: newKey,
       title: item.title,
       bids: 0,
-      price: 0, //change to store in cents?
-      highBidder: "",
-      highBidderId: "",
+      price: item.price, //change to store in cents?
+      highBidder: '',
+      highBidderId: '',
       seller: props.loggedIn.username,
       sellerId: props.loggedIn.id,
       img: item.img,
-      closeBidDateTime: "",
+      closeBidDateTime: '',
     };
 
-    console.log("client: ", data);
+    console.log('client: ', data);
 
-    fetch("http://localhost:3001/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch('http://localhost:3001/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log('Success:', data);
+        console.log(data);
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
       });
   };
 
@@ -76,27 +84,59 @@ const AddItem = (props) => {
                 <input
                   className="form-control"
                   name="title"
-                  placeholder=""
+                  placeholder="item title"
                   onChange={changeHandler}
-                  value={item.title || ""}
+                  value={item.title || ''}
                 />
 
                 <div className="mt-2">
-                  <label htmlFor="img">Image URL</label>
+                  <label htmlFor="img"> Add Image</label>
                   <input
                     className="form-control"
+                    accept="image/png, image/jpeg"
+                    type="file"
                     name="img"
                     placeholder=""
                     onChange={changeHandler}
-                    value={item.img || ""}
+                    value={item.img || ''}
                   />
+                  <label htmlFor="title">Inital price</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    name="price"
+                    placeholder="initial price"
+                    onChange={changeHandler}
+                    value={item.price || ''}
+                  />
+
+                  <label htmlFor="startDate">Start Date</label>
+                  <input
+                    className="form-control"
+                    type="datetime-local"
+                    name="startDate"
+                    placeholder=""
+                    onChange={changeHandler}
+                    value={startDate}
+                  />
+
+                  <label htmlFor="endDate">End Date</label>
+                  <input
+                    className="form-control"
+                    type="datetime-local"
+                    name="endDate"
+                    placeholder=""
+                    onChange={changeHandler}
+                    value={endDate}
+                  />
+
                   <textarea
                     className="form-control"
                     name="desc"
                     placeholder="Description"
                     rows="3"
                     onChange={changeHandler}
-                    value={item.desc || ""}
+                    value={item.desc || ''}
                   />
                   <button className="btn btn-primary mt-4">Add Item</button>
                 </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaWallet } from 'react-icons/fa';
 
 const Wallet = () => {
   const [balance, setBalance] = useState(0);
@@ -41,6 +42,9 @@ const Wallet = () => {
   return (
     <div>
       <h2>Wallet</h2>
+      <i>
+        <FaWallet />
+      </i>
       <p>Balance: ${balance.toFixed(2)}</p>
       <input
         type="number"

@@ -172,7 +172,7 @@ loggedIn = (req, res, next) => {
 // );
 
 app.post("/add", upload1.single("myFile"), (req, res) => {
-  /*
+
   var img = fs.readFileSync(req.file.path);
   var encode_image = img.toString("base64");
   // Define a JSONobject for the image attributes for saving to database
@@ -180,12 +180,12 @@ app.post("/add", upload1.single("myFile"), (req, res) => {
     contentType: req.file.mimetype,
     image: Buffer.from(encode_image, "base64"),
   };
-  */
+
   console.log(req.file.buffer.toString("base64"));
   //res.send(file);
   const body = { ...req.body, img: req.file.buffer.toString("base64") };
   const item = new Item(body);
-  //item.img = req.file.buffer.toString("base64");
+  item.img = req.file.buffer.toString("base64");
   console.log("adding");
   console.log(item);
   console.log("body");
