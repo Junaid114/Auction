@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { v4 as uuid } from "uuid";
-import Modal from "react-bootstrap/Modal";
+import React, { useState } from 'react';
+import { v4 as uuid } from 'uuid';
+import Modal from 'react-bootstrap/Modal';
 
 const AddItem = (props) => {
-  const [item, setItem] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [auctionStartDate, setAuctionStartDate] = useState("");
-  const [auctionEndDate, setAuctionEndDate] = useState("");
-  const [productImage, setProductImage] = useState("");
+  const [item, setItem] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [auctionStartDate, setAuctionStartDate] = useState('');
+  const [auctionEndDate, setAuctionEndDate] = useState('');
+  const [productImage, setProductImage] = useState('');
 
   /*
   const changeHandler = (event) => {
@@ -58,29 +58,29 @@ const AddItem = (props) => {
       auctionEndDate,
       productImage,
     };
-    console.log("data");
+    console.log('data');
     console.log(data);
     const formData = new FormData();
 
-    formData.append("title", title);
+    formData.append('title', title);
     //bids: Number,
-    formData.append("price", price);
-    formData.append("product_picture", productImage);
-    formData.append("auctionStartDate", auctionStartDate);
-    formData.append("auctionEndDate", auctionEndDate);
+    formData.append('price', price);
+    formData.append('product_picture', productImage);
+    formData.append('auctionStartDate', auctionStartDate);
+    formData.append('auctionEndDate', auctionEndDate);
 
-    fetch("http://localhost:3001/add", {
-      method: "POST",
+    fetch('http://localhost:3001/add', {
+      method: 'POST',
       // "Content-Type": "Application/json",
       body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log('Success:', data);
         console.log(data);
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
       });
   };
 

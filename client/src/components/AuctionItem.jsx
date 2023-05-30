@@ -95,7 +95,7 @@ const Item = (props) => {
     alert('Bidding has closed for this item.');
   };
   const TIME_LEFT =
-    (new Date('2023-05-29 11:23:54').getDate() - new Date().getDate()) *
+    (new Date('2023-05-30 11:23:54').getDate() - new Date().getDate()) *
     24 *
     60 *
     60 *

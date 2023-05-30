@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import AddItem from "./AddItem";
-import RegisterForm from "./RegisterForm";
-import Wallet from "./Wallet";
-import LoginForm from "./LoginForm";
-import { Link } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from 'react';
+import AddItem from './AddItem';
+import RegisterForm from './RegisterForm';
+import LoginForm from './LoginForm';
+import Wallet from './Wallet';
+import { Link } from 'react-router-dom';
 
 const Navbar = (props) => {
   const [showRegistrationFrom, setShowRegistrationFrom] = useState(false);
@@ -13,7 +13,7 @@ const Navbar = (props) => {
   const closeRegistrationFrom = useCallback(() => {
     setShowRegistrationFrom((prev) => !prev);
   }, []);
-  console.log("user", user);
+  console.log('user', user);
 
   const closeAddItemFrom = useCallback(() => {
     setShowAddItemForm((prev) => !prev);
@@ -28,14 +28,14 @@ const Navbar = (props) => {
   }, []);
 
   useEffect(() => {
-    const loggedUser = localStorage.getItem("user");
+    const loggedUser = localStorage.getItem('user');
     if (loggedUser !== null) {
       setUser(JSON.parse(loggedUser));
     }
   }, []);
   const logout = () => {
     setUser(null);
-    localStorage.setItem("user", null);
+    localStorage.setItem('user', null);
   };
   const login = useCallback((data) => {
     if (data !== null) {
@@ -47,7 +47,7 @@ const Navbar = (props) => {
       <nav className="navbar navbar-brand-center sticky-top navbar-expand-lg navbar-dark ">
         <div className="container">
           <a className="navbar-brand fs-2 text-light" href="/">
-            AUCTION APP <i className="fa-solid fa-gavel"></i>
+            AUCTION WEBAPP <i className="fa-solid fa-gavel"></i>
           </a>
           <button
             className="navbar-toggler"
@@ -65,12 +65,7 @@ const Navbar = (props) => {
 
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              <i className="nav-item">
-                {/* {/* <Link to="/Wallet"> */}
-
-                {/* </Link> */}
-              </i>
-
+              <Wallet />
               {user && (
                 <li
                   className="nav-item"
@@ -92,7 +87,7 @@ const Navbar = (props) => {
                 </button>
               ) : (
                 <>
-                  {" "}
+                  {' '}
                   <li
                     className="nav-item"
                     data-bs-toggle="modal"

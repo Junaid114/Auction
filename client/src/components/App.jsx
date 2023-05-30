@@ -100,7 +100,7 @@ const App = () => {
       <Navbar user={loggedIn} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/add" element={<AddItem />} />
+        {/* <Route path="/add" element={<AddItem />} /> */}
       </Routes>
 
       <Footer />
