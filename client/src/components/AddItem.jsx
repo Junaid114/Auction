@@ -130,7 +130,7 @@ const AddItem = (props) => {
             <input
               className="form-control"
               type="datetime-local"
-              name="auctionStartDate"
+              name="auctionEndDate"
               onChange={(e) => setAuctionEndDate(e.target.value)}
             />
             <textarea

@@ -41,7 +41,7 @@ const Wallet = () => {
   return (
     <div>
       <p>Balance: ${balance.toFixed(2)}</p>
-      <button onClick={handleDeposit}></button>
+      <button onClick={handleDeposit}>withdraw</button>
     </div>
   );
 };

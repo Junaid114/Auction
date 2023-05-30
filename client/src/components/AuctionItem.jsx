@@ -95,7 +95,7 @@ const Item = (props) => {
     alert('Bidding has closed for this item.');
   };
   const TIME_LEFT =
-    (new Date('2023-05-30 11:23:54').getDate() - new Date().getDate()) *
+    (new Date('2023-05-31 11:23:54').getDate() - new Date().getDate()) *
     24 *
     60 *
     60 *
@@ -109,7 +109,7 @@ const Item = (props) => {
   //const dateTimeAfterThreeDays = NOW_IN_MS + new Date("2023-05-28 11:23:54");
   console.log('now time => ', new Date('2023-05-28 11:23:54').getDay());
   console.log(dateTimeAfterThreeDays);
-  // const dateTimeAfterSevenDays = NOW_IN_MS + SEVEN_DAYS_IN_MS;
+  //  const dateTimeAfterSevenDays = NOW_IN_MS + SEVEN_DAYS_IN_MS;
   return (
     <div className="container my-0 px-0 d-flex justify-content-center align-items-center col-sm-6 col-lg-4 col-xl-3">
       <div className="card border-0">

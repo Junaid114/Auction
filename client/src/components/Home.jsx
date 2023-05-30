@@ -34,6 +34,7 @@ const Home = () => {
 
   const sendBid = (itemID) => {
     let newBid = items.filter((items) => items.id === itemID);
+    console.log(newBid);
     const { bids, price } = newBid[0];
     let increase = 0;
 
