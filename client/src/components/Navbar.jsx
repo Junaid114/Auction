@@ -21,6 +21,7 @@ const Navbar = (props) => {
 
   const addItemHandler = useCallback(() => {
     setShowAddItemForm((prev) => !prev);
+    window.location.reload();
   }, []);
 
   const closeLoginFrom = useCallback(() => {
