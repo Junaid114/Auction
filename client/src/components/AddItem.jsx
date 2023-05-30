@@ -12,6 +12,16 @@ const AddItem = (props) => {
   const [auctionEndDate, setAuctionEndDate] = useState('');
   const [productImage, setProductImage] = useState('');
 
+  const clearForm = () => {
+    setItem("");
+    setStartDate("");
+    setTitle("");
+    setDescription("");
+    setPrice("");
+    setAuctionStartDate("");
+    setAuctionEndDate("");
+    setProductImage("");
+  };
   /*
   const changeHandler = (event) => {
     const { name, value } = event.target;
@@ -31,7 +41,14 @@ const AddItem = (props) => {
   const fileChangeHandler = (event) => {
     setProductImage(event.target.files[0]);
   };
-  const addUserItem = (event) => {
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+  const addUserItem = async (event) => {
     event.preventDefault();
     const newKey = uuid();
     /*
@@ -60,23 +77,25 @@ const AddItem = (props) => {
     };
     console.log('data');
     console.log(data);
+
     const formData = new FormData();
 
     formData.append('title', title);
     //bids: Number,
-    formData.append('price', price);
-    formData.append('product_picture', productImage);
-    formData.append('auctionStartDate', auctionStartDate);
-    formData.append('auctionEndDate', auctionEndDate);
+    formData.append("price", price);
+    formData.append("product_picture", productImage);
+    formData.append("auctionStartDate", auctionStartDate);
+    formData.append("auctionEndDate", auctionEndDate);
 
     fetch('http://localhost:3001/add', {
       method: 'POST',
       // "Content-Type": "Application/json",
+      "content-type": "multipart/form-data",
       body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', data);
+        console.log("Success:", data);
         console.log(data);
       })
       .catch((error) => {
@@ -106,7 +125,6 @@ const AddItem = (props) => {
               accept="image/png, image/jpeg"
               type="file"
               name="product_picture"
-              placeholder=""
               onChange={fileChangeHandler}
             />
             <label htmlFor="title">Initial price</label>
@@ -140,10 +158,22 @@ const AddItem = (props) => {
               rows="3"
               onChange={(e) => setDescription(e.target.value)}
             />
-            <button className="btn btn-primary mt-4">Add Item</button>
+            <button
+              className="btn btn-primary mt-4"
+              style={{ marginRight: 10 }}
+            >
+              Add Item
+            </button>
             <button
               type="button"
-              className="btn btn-primary mt-4 ml-10"
+              className="btn btn-primary mt-4 mr-10"
+              onClick={clearForm}
+            >
+              Clear Form
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary mt-4 "
               onClick={props.toggle}
             >
               Close
