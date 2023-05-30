@@ -10,30 +10,31 @@ const app = express();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+var bodyParser = require("body-parser");
+
 // SET STORAGE
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads");
+  destination: function (request, file, callback) {
+    callback(null, "./uploads");
   },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
+  filename: function (request, file, callback) {
+    console.log(request);
+    console.log(file);
+    var temp_file_arr = file.originalname.split(".");
+    var temp_file_name = temp_file_arr[0];
+    var temp_file_extension = temp_file_arr[1];
+    callback(
+      null,
+      temp_file_name + "-" + Date.now() + "." + temp_file_extension
+    );
   },
 });
+
 var upload = multer({ storage: storage });
-var upload1 = multer();
-// for passport.js:
-// changing this to cookie-session removes prof error but kills local strat log in
-//also need to remove destroy in logout route
-//const session = require("express-session");
-// const passport = require("passport");
-//passport-local installed, do not have to set
-// const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const { redirect } = require("express/lib/response");
 
-// const uri = process.env.MONGO_URI;
-//const uri = "mongodb://rootMmongoDB:MyPassW0rd@127.0.0.1:27017";
 const uri = "mongodb://root:rootPassword@127.0.0.1:27017";
 const PORT = process.env.PORT || 3001;
 let userDetails = {};
@@ -46,22 +47,16 @@ if (process.env.NODE_ENV !== "production") {
   URL = "http://localhost:3001";
 }
 
-//config session for express
-/*
-app.use(
-  session({
-    secret: process.env.EXPRESS_SECRET,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-*/
-//app.use(passport.initialize());
-//app.use(passport.session());
+// /app.use(bodyParser.json());
 
 // need this to parse the json with the req
 app.use(express.json());
-app.use(express.text());
+app.use(express.urlencoded({ extended: false }));
+//app.use(express.static("server/uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+//app.use(express.text());
+console.log("pathe name => ");
+console.log(express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: "*",
@@ -106,42 +101,8 @@ userSchema.plugin(findOrCreate);
 const Item = mongoose.model("Item", itemSchema);
 const User = new mongoose.model("User", userSchema);
 
-// Simplified version to create the local strategy
-//passport.use(User.createStrategy());
-/*
-passport.serializeUser(function (user, cb) {
-  process.nextTick(function () {
-    cb(null, { id: user.id, username: user.username, name: user.displayName });
-  });
-});
-
-passport.deserializeUser(function (user, cb) {
-  process.nextTick(function () {
-    return cb(null, user);
-  });
-});
-
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: URL + "/auth/google/callback",
-    },
-    function (accessToken, refreshToken, profile, cb) {
-      User.findOrCreate(
-        { googleId: profile.id, username: profile.displayName },
-        function (err, user) {
-          userDetails = profile;
-          return cb(err, user);
-        }
-      );
-    }
-  )
-);
-*/
 // Have Node serve the files for React app
-app.use(express.static(path.resolve(__dirname, "../client/build")));
+// app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 // check if logged in
 loggedIn = (req, res, next) => {
@@ -152,33 +113,47 @@ loggedIn = (req, res, next) => {
   } else {
   }
 };
+var storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "server/uploads");
+  },
+  filename: function (req, file, callback) {
+    var temp_file_arr = file.originalname.split(".");
+    var temp_file_name = temp_file_arr[0];
+    var temp_file_extension = temp_file_arr[1];
+    callback(
+      null,
+      temp_file_name + "-" + Date.now() + "." + temp_file_extension
+    );
+  },
+});
 
-//ROUTES
+var upload = multer({ storage: storage }).single("product_picture");
+app.post("/add", (req, res) => {
+  upload(req, res, function (error) {
+    if (error) {
+      return res.end("Error Uploading File");
+    } else {
+      const record = { ...req.body, img: req.file.filename };
+      const item = new Item(record);
+      //item.img = req.file.buffer.toString("base64");
+      item.save();
+      res.status(200).json(item);
+    }
+  });
 
-// app.get("/", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-// });
-
-// app.get(
-//   "/auth/google",
-//   passport.authenticate("google", { scope: ["profile"] }) //add email
-// );
-
-// app.get(
-//   "/auth/google/callback",
-//   passport.authenticate("google", {
-//     successRedirect: "/",
-//     failureRedirect: "/",
-//     failureFlash: true,
-//   })
-// );
-
-app.post("/add", upload1.single("product_picture"), (req, res) => {
-  console.log("image path ");
-  console.log(req.product_picture);
-  var img = fs.readFileSync(req.product_picture);
-  //console.log("image");
-  console.log(img);
+  //console.log(req.file);
+  // console.log("image path ");
+  // console.log(req.file);
+  // console.log(req.file.filename);
+  // console.log(req.file.product_picture);
+  // console.log("buffer");
+  // console.log(req.file.buffer);
+  // //console.log("filessssssssssssssssssssssssssssss");
+  // var img = fs.readFileSync(req.file.filename);
+  // //console.log("image");
+  // console.log(img);
+  // console.log("imageeeeeeeeeeeeeeeeeee");
   //var encode_image = img.toString("base64");
   // Define a JSONobject for the image attributes for saving to database
   // var finalImg = {
@@ -189,13 +164,7 @@ app.post("/add", upload1.single("product_picture"), (req, res) => {
   //console.log(req.file.buffer.toString("base64"));
   //res.send(file);
   //const body = { ...req.body, img: req.file.buffer.toString("base64") };
-  const item = new Item(req.body);
-  //item.img = req.file.buffer.toString("base64");
-  console.log("adding");
-  console.log(item);
-  console.log("body");
-  item.save();
-  res.status(200).json(item);
+
   //add response here, check others ******************************************************************
 });
 

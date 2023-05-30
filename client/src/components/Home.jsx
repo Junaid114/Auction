@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import AuctionItem from './AuctionItem';
-import Navbar from './Navbar';
-import Footer from './Footer';
-import TimeLeft from './TimeLeft';
-import { Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import AuctionItem from "./AuctionItem";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import TimeLeft from "./TimeLeft";
+import { Routes, Route } from "react-router-dom";
 
 const Home = () => {
   //
@@ -15,16 +15,20 @@ const Home = () => {
   console.log(loggedIn);
 
   const getAll = () => {
-    fetch('http://localhost:3001/all')
+    fetch("http://localhost:3001/all")
       .then((res) => res.json())
       .then((data) => setItems(data));
   };
 
   //candidate for useEffect?
   const isLoggedIn = () => {
-    fetch('http://localhost:3001/loggedin')
-      .then((res) => res.json())
-      .then((data) => setLoggedIn(data));
+    // fetch('http://localhost:3001/loggedin')
+    //   .then((res) => res.json())
+    //   .then((data) => setLoggedIn(data));
+    const user = localStorage.getItem("user");
+    if (user !== null) {
+      setLoggedIn(JSON.parse(user));
+    }
   };
 
   useEffect(() => {
@@ -67,33 +71,33 @@ const Home = () => {
       highBidderID: loggedIn.id,
     };
 
-    fetch('http://localhost:3001/bid', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch("http://localhost:3001/bid", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedBid),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', data);
+        console.log("Success:", data);
         getAll(); //this makes it refresh immediately - ok tho?
       })
       .catch((error) => {
-        console.log('Error:', error);
+        console.log("Error:", error);
       });
   };
 
   const deleteItem = (id) => {
-    fetch('http://localhost:3001/delete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
+    fetch("http://localhost:3001/delete", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
       body: id,
     })
       .then((response) => response)
       .then((data) => {
-        console.log('Success:', data);
+        console.log("Success:", data);
       })
       .catch((error) => {
-        console.log('Error:', error);
+        console.log("Error:", error);
       });
     getAll();
   };
@@ -103,7 +107,7 @@ const Home = () => {
       <div className="container ">
         <div className="container">
           <h4 className="text-center">Auction begins at:</h4>
-          <h5 className="text-center">{''}</h5>
+          <h5 className="text-center">{""}</h5>
         </div>
 
         <div className="row ">
@@ -119,7 +123,7 @@ const Home = () => {
                 highBidderId={item.highBidderId}
                 seller={item.seller}
                 sellerId={item.sellerId}
-                closeDate={''}
+                closeDate={""}
                 img={item.img}
                 index={index}
                 sendBid={sendBid}
